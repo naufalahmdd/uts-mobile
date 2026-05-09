@@ -22,10 +22,31 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // Ubah dari MaterialApp biasa menjadi MaterialApp.router
     return MaterialApp.router(
+      title: 'UTD Store',
       debugShowCheckedModeBanner: false,
-      title: 'UTD Advanced App',
-      theme: AppTheme.lightTheme,
-      // Masukkan konfigurasi rute yang sudah kita buat di Step 6
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: Colors.indigo,
+          brightness: Brightness.light,
+        ),
+        appBarTheme: const AppBarTheme(
+          centerTitle: true,
+          backgroundColor: Colors.indigo,
+          foregroundColor: Colors.white,
+          elevation: 0,
+        ),
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+          ),
+        ),
+      ),
       routerConfig: AppRouter.router,
     );
   }

@@ -72,10 +72,21 @@ class _CryptoPageState extends State<CryptoPage>
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // --- KARTU HARGA BITCOIN REAL-TIME ---
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+            Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.indigo.shade700, Colors.indigo.shade500],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.indigo.withOpacity(0.3),
+                    blurRadius: 15,
+                    offset: const Offset(0, 8),
+                  )
+                ],
               ),
               child: Padding(
                 padding: const EdgeInsets.all(24),
@@ -84,92 +95,82 @@ class _CryptoPageState extends State<CryptoPage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.network(
-                          'https://assets.coincap.io/assets/icons/btc@2x.png',
-                          width: 40,
-                          height: 40,
-                          errorBuilder: (_, __, ___) =>
-                              const Icon(Icons.currency_bitcoin,
-                                  size: 40, color: Colors.orange),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                          child: Image.network(
+                            'https://assets.coincap.io/assets/icons/btc@2x.png',
+                            width: 32,
+                            height: 32,
+                          ),
                         ),
-                        const SizedBox(width: 10),
+                        const SizedBox(width: 12),
                         const Text(
                           'Bitcoin (BTC)',
                           style: TextStyle(
-                              fontSize: 22, fontWeight: FontWeight.bold),
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ],
                     ),
-                    const SizedBox(height: 16),
-                    const Text(
+                    const SizedBox(height: 20),
+                    Text(
                       'Harga Real-Time (USD)',
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.8),
+                        fontSize: 13,
+                      ),
                     ),
                     const SizedBox(height: 8),
-                    // StreamBuilder untuk harga WebSocket - bereaksi real-time
                     StreamBuilder<double>(
                       stream: _cryptoService.connectBitcoinPrice(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData && snapshot.data! > 0) {
-                          final newPrice = snapshot.data!;
-                          // Update warna berdasarkan naik/turun
-                          if (newPrice > _prevPrice && _prevPrice > 0) {
-                            _priceColor = Colors.green;
-                          } else if (newPrice < _prevPrice) {
-                            _priceColor = Colors.red;
-                          }
-                          _prevPrice = newPrice;
-                          _btcPrice = newPrice;
-                          // Trigger animasi pulse setiap update harga
+                          _btcPrice = snapshot.data!;
                           _pulseController.forward(from: 0);
                         }
-
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Column(children: [
-                            CircularProgressIndicator(),
-                            SizedBox(height: 8),
-                            Text('Menghubungkan ke WebSocket...'),
-                          ]);
-                        }
-
                         return ScaleTransition(
                           scale: _pulseAnimation,
                           child: Text(
-                            _btcPrice > 0
-                                ? '\$ ${_btcPrice.toStringAsFixed(2)}'
-                                : 'Memuat...',
-                            style: TextStyle(
+                            '\$ ${_btcPrice.toStringAsFixed(2)}',
+                            style: const TextStyle(
                               fontSize: 40,
                               fontWeight: FontWeight.bold,
-                              color: _priceColor,
+                              color: Colors.white,
+                              letterSpacing: 1,
                             ),
                           ),
                         );
                       },
                     ),
-                    const SizedBox(height: 4),
-                    // Indikator animasi live
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          width: 8,
-                          height: 8,
-                          decoration: const BoxDecoration(
-                            color: Colors.green,
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                        const SizedBox(width: 6),
-                        const Text(
-                          'LIVE',
-                          style: TextStyle(
-                              color: Colors.green,
+                    const SizedBox(height: 12),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.bolt, color: Colors.yellow, size: 16),
+                          SizedBox(width: 4),
+                          Text(
+                            'LIVE UPDATING',
+                            style: TextStyle(
+                              color: Colors.white,
                               fontWeight: FontWeight.bold,
-                              fontSize: 12),
-                        ),
-                      ],
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),

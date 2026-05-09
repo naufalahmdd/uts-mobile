@@ -77,22 +77,40 @@ class _NativePageState extends State<NativePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // -- KARTU INFO BATERAI --
-            Card(
-              elevation: 4,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20)),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(24),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                  )
+                ],
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(24),
                 child: Column(
                   children: [
-                    Icon(
-                      _batteryLevel != null
-                          ? _getBatteryIcon(_batteryLevel!)
-                          : Icons.battery_unknown,
-                      size: 80,
-                      color: _batteryLevel != null
-                          ? _getBatteryColor(_batteryLevel!)
-                          : Colors.grey,
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: (_batteryLevel != null
+                                ? _getBatteryColor(_batteryLevel!)
+                                : Colors.grey)
+                            .withOpacity(0.1),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        _batteryLevel != null
+                            ? _getBatteryIcon(_batteryLevel!)
+                            : Icons.battery_unknown,
+                        size: 60,
+                        color: _batteryLevel != null
+                            ? _getBatteryColor(_batteryLevel!)
+                            : Colors.grey,
+                      ),
                     ),
                     const SizedBox(height: 16),
                     const Text(
