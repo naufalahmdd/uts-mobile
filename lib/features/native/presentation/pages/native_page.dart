@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../data/native_service.dart';
+import '../../data/native_service.dart';
 
 class NativePage extends StatefulWidget {
   const NativePage({super.key});
