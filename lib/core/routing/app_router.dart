@@ -5,6 +5,7 @@ import '../../features/product/presentation/pages/product_page.dart';
 import '../../features/product/presentation/pages/detail_page.dart';
 import '../../features/product/presentation/cubit/product_cubit.dart'; // Import ini
 import '../di/injection.dart'; // Import ini
+import '../../features/splash/presentation/pages/splash_page.dart'; // Import ini
 
 class AppRouter {
   static final router = GoRouter(
@@ -12,6 +13,10 @@ class AppRouter {
     routes: [
       GoRoute(
         path: '/',
+        builder: (context, state) => const SplashPage(),
+      ),
+      GoRoute(
+        path: '/home',
         builder: (context, state) {
           // BUNGKUS PRODUCT PAGE DENGAN BLOC PROVIDER
           return BlocProvider(

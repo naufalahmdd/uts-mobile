@@ -11,12 +11,8 @@ final locator = GetIt.instance;
 
 void main() {
   // SANGAT PENTING: Panggil Pelayan (GetIt) sebelum aplikasi berjalan!
-  locator.registerLazySingleton<ProductRepository>(() => ProductRepository());
-  locator.registerFactory<ProductService>(() => ProductService(locator()));
-  // DAFTARKAN CUBIT KITA DI SINI
-  // registerFactory artinya setiap kali halaman dibuka, buat Cubit yang baru agar bersih
-  locator.registerFactory<ProductCubit>(() => ProductCubit(locator()));
-  // Jika ini lupa dipanggil, aplikasi akan error layar merah.
+  setupLocator();
+
   runApp(const MainApp());
 }
 
