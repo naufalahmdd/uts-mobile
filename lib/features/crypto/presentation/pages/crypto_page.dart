@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../data/crypto_service.dart';
-import '../domain/crypto_isolate.dart';
+import '../../data/crypto_service.dart';
+import '../../domain/crypto_isolate.dart';
 
 class CryptoPage extends StatefulWidget {
   const CryptoPage({super.key});
