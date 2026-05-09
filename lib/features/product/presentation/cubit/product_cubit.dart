@@ -15,7 +15,7 @@ class ProductCubit extends Cubit<ProductState> {
     await Future.delayed(const Duration(seconds: 2));
     try {
       // 3. Minta data ke Pelayan (Service)
-      final data = _service.fetchProducts();
+      final data = await _service.fetchProducts();
       // 4. Jika berhasil, pancarkan state Sukses beserta datanya!
       emit(ProductLoaded(data));
     } catch (e) {

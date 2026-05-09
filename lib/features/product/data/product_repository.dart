@@ -1,25 +1,35 @@
+import 'package:dio/dio.dart';
 import '../domain/product_model.dart';
 
 class ProductRepository {
-  // 1. Membuat data pura-pura (dummy)
-  final List<Product> _dummyData = [
-    Product(id: 'P01', name: 'Laptop UTD Pro'),
-    Product(id: 'P02', name: 'Mouse Wireless'),
-    Product(id: 'P03', name: 'Keyboard Mekanikal'),
-  ];
-  // 2. Fungsi untuk mengambil semua daftar produk
-  List<Product> getAllProducts() {
-    return _dummyData;
+  final Dio dio;
+
+  ProductRepository({required this.dio});
+
+  // 2. Fungsi untuk mengambil semua daftar produk dari API
+  Future<List<Product>> getAllProducts() async {
+    try {
+      final response = await dio.get('https://fakestoreapi.com/products');
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data;
+        return data.map((json) => Product.fromJson(json)).toList();
+      }
+      return [];
+    } catch (e) {
+      throw Exception('Failed to load products: $e');
+    }
   }
 
   // 3. Fungsi untuk mencari 1 produk berdasarkan ID-nya
-  Product? getProductById(String id) {
+  Future<Product?> getProductById(String id) async {
     try {
-      // Cari produk pertama yang ID-nya cocok dengan parameter
-      return _dummyData.firstWhere((prod) => prod.id == id);
-    } catch (e) {
-      // Jika tidak ketemu, kembalikan null (kosong)
+      final response = await dio.get('https://fakestoreapi.com/products/$id');
+      if (response.statusCode == 200) {
+        return Product.fromJson(response.data);
+      }
       return null;
+    } catch (e) {
+      throw Exception('Failed to load product detail: $e');
     }
   }
 }
