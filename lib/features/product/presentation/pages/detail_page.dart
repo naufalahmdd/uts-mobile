@@ -1,47 +1,145 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../core/di/injection.dart'; // Import pelayan
-import '../../domain/product_service.dart'; // Import service
+import '../../../../core/di/injection.dart';
+import '../../domain/product_model.dart';
+import '../../domain/product_service.dart';
+import '../../../bookmark/data/bookmark_repository.dart';
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   final String productId;
-  // Halaman ini menerima productId dari AppRouter sebelumnya
   const DetailPage({super.key, required this.productId});
+
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  Product? _product;
+  bool _isLoading = true;
+  String? _error;
+  bool _isBookmarked = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadProduct();
+  }
+
+  Future<void> _loadProduct() async {
+    try {
+      final service = locator<ProductService>();
+      final result = await service.fetchProductDetail(widget.productId);
+      final isBookmarked =
+          await locator<BookmarkRepository>().isBookmarked(widget.productId);
+      if (mounted) {
+        setState(() {
+          _product = result;
+          _isBookmarked = isBookmarked;
+          _isLoading = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _error = e.toString();
+          _isLoading = false;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // AJAIB! Kita minta data ke Pelayan (locator).
-    // UI tidak perlu buat 'new ProductService()', cukup panggil locator!
-    final service = locator<ProductService>();
-    final product = service.fetchProductDetail(productId);
-    // Jika produk tidak ditemukan (ID salah)
-    if (product == null) {
+    if (_isLoading) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Detail Produk')),
+        body: const Center(child: CircularProgressIndicator()),
+      );
+    }
+    if (_error != null || _product == null) {
       return Scaffold(
         appBar: AppBar(title: const Text('Detail Produk')),
         body: const Center(child: Text('Maaf, produk tidak ditemukan!')),
       );
     }
-    // Jika produk ditemukan, tampilkan UI-nya
+    final product = _product!;
     return Scaffold(
-      appBar: AppBar(title: Text('Detail: ${product.name}')),
-      body: Center(
+      appBar: AppBar(
+        title: const Text('Detail Produk'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.pop(),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(Icons.inventory_2, size: 100, color: Colors.teal.shade200),
-            const SizedBox(height: 20),
-            Text(
-              'ID Produk: ${product.id}',
-              style: const TextStyle(fontSize: 16),
+            Center(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  product.image,
+                  height: 220,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.image, size: 100),
+                ),
+              ),
             ),
+            const SizedBox(height: 20),
             Text(
               product.name,
-              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              // CARA KEMBALI MENGGUNAKAN GO_ROUTER
-              onPressed: () => context.pop(),
-              child: const Text('Kembali'),
+            const SizedBox(height: 8),
+            Text(
+              '\$${product.price.toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+            const SizedBox(height: 24),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: Icon(_isBookmarked
+                    ? Icons.bookmark
+                    : Icons.bookmark_add_outlined),
+                label: Text(_isBookmarked
+                    ? 'Sudah Tersimpan'
+                    : 'Simpan ke Bookmark'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      _isBookmarked ? Colors.grey : Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                onPressed: () async {
+                  final repo = locator<BookmarkRepository>();
+                  if (_isBookmarked) {
+                    await repo.removeBookmark(product.id);
+                    setState(() => _isBookmarked = false);
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Bookmark dihapus')),
+                      );
+                    }
+                  } else {
+                    await repo.addBookmark(product);
+                    setState(() => _isBookmarked = true);
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                            content: Text('Berhasil disimpan ke Bookmark!')),
+                      );
+                    }
+                  }
+                },
+              ),
             ),
           ],
         ),

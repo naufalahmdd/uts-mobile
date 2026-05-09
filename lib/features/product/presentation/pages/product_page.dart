@@ -10,7 +10,16 @@ class ProductPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Daftar Produk')),
+      appBar: AppBar(
+        title: const Text('UTD Store - Naufal'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.bookmarks),
+            tooltip: 'Bookmark Saya',
+            onPressed: () => context.push('/bookmark'),
+          ),
+        ],
+      ),
       body: BlocBuilder<ProductCubit, ProductState>(
         builder: (context, state) {
           // 1. JIKA STATE = LOADING (Tampilkan indikator putar)

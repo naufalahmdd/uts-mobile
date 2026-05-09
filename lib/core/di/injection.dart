@@ -4,6 +4,7 @@ import '../../features/product/data/product_repository.dart';
 import '../../features/product/domain/product_service.dart';
 import '../../features/splash/domain/splash_service.dart';
 import '../../features/product/presentation/cubit/product_cubit.dart';
+import '../../features/bookmark/data/bookmark_repository.dart';
 
 // Inisialisasi sang 'Pelayan' secara global
 final locator = GetIt.instance;
@@ -36,4 +37,7 @@ void setupLocator() {
 
   // 4. Mendaftarkan Cubit
   locator.registerFactory<ProductCubit>(() => ProductCubit(locator()));
+
+  // 5. Bookmark Repository (Isar)
+  locator.registerLazySingleton<BookmarkRepository>(() => BookmarkRepository());
 }
