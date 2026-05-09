@@ -8,6 +8,7 @@ import '../../features/splash/presentation/pages/splash_page.dart';
 import '../../features/bookmark/presentation/pages/bookmark_page.dart';
 import '../../features/crypto/presentation/pages/crypto_page.dart';
 import '../../features/native/presentation/pages/native_page.dart';
+import '../../features/splash/presentation/pages/about_page.dart';
 import '../di/injection.dart';
 
 class AppRouter {
@@ -47,6 +48,10 @@ class AppRouter {
       GoRoute(
         path: '/native',
         builder: (context, state) => const NativePage(),
+      ),
+      GoRoute(
+        path: '/about',
+        builder: (context, state) => const AboutPage(),
       ),
     ],
   );

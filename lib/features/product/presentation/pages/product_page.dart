@@ -28,6 +28,11 @@ class ProductPage extends StatelessWidget {
             tooltip: 'Bookmark Saya',
             onPressed: () => context.push('/bookmark'),
           ),
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            tooltip: 'Tentang Saya',
+            onPressed: () => context.push('/about'),
+          ),
         ],
       ),
       body: BlocBuilder<ProductCubit, ProductState>(

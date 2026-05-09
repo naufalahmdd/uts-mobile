@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:uts_mobile/features/product/data/product_repository.dart';
-import 'package:uts_mobile/features/product/domain/product_service.dart';
-import 'core/theme/app_theme.dart';
-import 'core/routing/app_router.dart';
 import 'core/di/injection.dart';
-import 'package:get_it/get_it.dart';
-import '../../features/product/presentation/cubit/product_cubit.dart';
+import 'core/routing/app_router.dart';
 
-final locator = GetIt.instance;
-
-void main() {
-  // SANGAT PENTING: Panggil Pelayan (GetIt) sebelum aplikasi berjalan!
+void main() async {
+  // Pastikan binding Flutter sudah siap sebelum setup DI
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  // Jalankan Dependency Injection (GetIt)
   setupLocator();
 
   runApp(const MainApp());
@@ -18,9 +14,9 @@ void main() {
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    // Ubah dari MaterialApp biasa menjadi MaterialApp.router
     return MaterialApp.router(
       title: 'UTD Store',
       debugShowCheckedModeBanner: false,
