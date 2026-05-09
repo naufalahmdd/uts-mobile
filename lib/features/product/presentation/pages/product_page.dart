@@ -19,6 +19,11 @@ class ProductPage extends StatelessWidget {
             onPressed: () => context.push('/crypto'),
           ),
           IconButton(
+            icon: const Icon(Icons.phone_android),
+            tooltip: 'Native Info',
+            onPressed: () => context.push('/native'),
+          ),
+          IconButton(
             icon: const Icon(Icons.bookmarks),
             tooltip: 'Bookmark Saya',
             onPressed: () => context.push('/bookmark'),
