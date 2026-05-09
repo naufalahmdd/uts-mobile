@@ -14,6 +14,11 @@ class ProductPage extends StatelessWidget {
         title: const Text('UTD Store - Naufal'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.currency_bitcoin),
+            tooltip: 'Crypto Hub',
+            onPressed: () => context.push('/crypto'),
+          ),
+          IconButton(
             icon: const Icon(Icons.bookmarks),
             tooltip: 'Bookmark Saya',
             onPressed: () => context.push('/bookmark'),
